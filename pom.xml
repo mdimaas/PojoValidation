@@ -20,6 +20,7 @@
 
 		<log4j.ver>1.2.17</log4j.ver>
 		<junit.version>4.11</junit.version>
+		<coveralls.version>4.1.0</coveralls.version>
 	</properties>
 
 
@@ -55,7 +56,27 @@
 				</includes>
 			</resource>
 		</resources>
-	</build>
 
+		<plugins>
+			<plugin>
+				<groupId>org.eluder.coveralls</groupId>
+				<artifactId>coveralls-maven-plugin</artifactId>
+				<version>${coveralls.version}</version>
+			</plugin>
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<version>0.7.5.201505241946</version>
+				<executions>
+					<execution>
+						<id>prepare-agent</id>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
 
 </project>
