@@ -1,11 +1,12 @@
 package com.delidishes.validate.pojo;
 
 import com.delidishes.validate.annotation.*;
+import com.delidishes.validate.handler.TestCustomHandlerValidate;
 
 public class TestPojo {
 	@NotNull
 	public String strTestValue;
-	@GoogleReCaptcha2Validate(appSecret = "")
+	@GoogleReCaptcha2Validate(appSecret = "test")
 	public String captchaTest;
 	public String ruleEqTest1;
 	@Rules(rules = {@Rule(rule = "eq #f{ruleEqTest1}")})

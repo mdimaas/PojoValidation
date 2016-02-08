@@ -12,7 +12,6 @@ import static com.delidishes.validate.ValidateStringUtils.SPACE;
 
 public class RuleBuilder {
 
-
 	private static final String OPERATION_PATTERN_REGEX = "^([a-zA-Z\\s]+)\\s#f.*$";
 	private static final Pattern OPERATION_PATTERN = Pattern.compile(OPERATION_PATTERN_REGEX);
 	private static final String FIELD_PATTERN_REGEX = "^.*#f\\{([a-zA-Z\\d]+)\\}$";

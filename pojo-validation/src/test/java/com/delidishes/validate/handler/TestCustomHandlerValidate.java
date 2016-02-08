@@ -1,6 +1,4 @@
-package com.delidishes.validate.pojo;
-
-import com.delidishes.validate.handler.IValidateHandler;
+package com.delidishes.validate.handler;
 
 public class TestCustomHandlerValidate implements IValidateHandler<Integer> {
 	@Override

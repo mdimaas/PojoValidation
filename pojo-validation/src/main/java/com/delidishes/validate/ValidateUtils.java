@@ -73,7 +73,7 @@ public final class ValidateUtils {
 				googleReCaptcha2.setErrorMessage(annotation.errorMessage());
 				googleReCaptcha2.setValue(String.valueOf(field.get(pojo)));
 				boolean verify = new GoogleReCaptcha2ValidateHandler().verify(googleReCaptcha2);
-				writeResult(result, verify, annotation.errorMessage());
+				writeResult(result, verify, googleReCaptcha2.getErrorMessage());
 			} catch (IllegalAccessException e) {
 				log.error("Validate error in method {Validate.googleReCaptcha2Validate}", e);
 			}
