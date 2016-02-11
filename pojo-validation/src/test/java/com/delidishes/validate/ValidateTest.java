@@ -108,4 +108,18 @@ public class ValidateTest {
 	public void notNullValidateFalseTest(){
 		assertFalse(ValidateUtils.emptyValidate(testPojo).isValid());
 	}
+
+	@Test(expected = ValidateException.class)
+	public void throwsValidationExceptionTest2() throws ValidateException {
+		testPojo.customHandler = 100;
+		ValidateUtils.customHandlerValidate(testPojo).throwsExceptionIfFalse(error -> "Override error text test!");
+	}
+
+	@Test(expected = ValidateException.class)
+	public void throwsValidationExceptionTest3() throws ValidateException {
+		testPojo.customHandler = 100;
+		if(!ValidateUtils.customHandlerValidate(testPojo).isValid()){
+			throw new ValidateException();
+		}
+	}
 }
