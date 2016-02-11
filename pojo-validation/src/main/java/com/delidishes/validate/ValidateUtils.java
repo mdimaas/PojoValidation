@@ -26,6 +26,7 @@ public final class ValidateUtils {
 	public static final Logger log = Logger.getLogger(ValidateUtils.class);
 
 	private ValidateUtils() {
+		throw new UnsupportedOperationException();
 	}
 
 	public static ValidateResult bitwiseUnion(Collection<ValidateResult> result) {
@@ -70,10 +71,9 @@ public final class ValidateUtils {
 				GoogleReCaptcha2 googleReCaptcha2 = new GoogleReCaptcha2();
 				GoogleReCaptcha2Validate annotation = field.getAnnotation(GoogleReCaptcha2Validate.class);
 				googleReCaptcha2.setAppSecret(annotation.appSecret());
-				googleReCaptcha2.setErrorMessage(annotation.errorMessage());
 				googleReCaptcha2.setValue(String.valueOf(field.get(pojo)));
 				boolean verify = new GoogleReCaptcha2ValidateHandler().verify(googleReCaptcha2);
-				writeResult(result, verify, googleReCaptcha2.getErrorMessage());
+				writeResult(result, verify, annotation.errorMessage());
 			} catch (IllegalAccessException e) {
 				log.error("Validate error in method {Validate.googleReCaptcha2Validate}", e);
 			}
@@ -123,7 +123,7 @@ public final class ValidateUtils {
 					log.debug(String.format("VALIDATION: Field = [%s]. Rule [%s] is %s", field.getName(), rule.rule(), result));
 					writeResult(validateResult, result, rule.errorMessage());
 				} catch (NoSuchFieldException | IllegalAccessException e) {
-					e.printStackTrace();
+					log.error("Validate error in method {Validate.rulesValidate}", e);
 				}
 			});
 
