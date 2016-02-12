@@ -6,7 +6,6 @@ import com.delidishes.validate.spring.ValidType;
 import com.delidishes.validate.spring.ValidateHttpServletWrapper;
 import com.delidishes.validate.spring.ValidateSpringUtils;
 import com.delidishes.validate.spring.annotation.Valid;
-import com.sun.xml.internal.ws.server.UnsupportedMediaException;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
