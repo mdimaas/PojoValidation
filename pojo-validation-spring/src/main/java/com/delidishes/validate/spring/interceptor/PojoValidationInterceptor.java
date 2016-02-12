@@ -48,7 +48,7 @@ public class PojoValidationInterceptor extends HandlerInterceptorAdapter {
 		if(SUPPORT_CONTENT_TYPES.contains(request.getContentType())) {
 			return ValidateSpringUtils.fromJson(new ValidateHttpServletWrapper(request).getBody(), pojoClass);
 		}
-		throw new UnsupportedMediaException(request.getContentType(), SUPPORT_CONTENT_TYPES);
+		throw new UnsupportedOperationException(String.format("Not supported content type [%s]", request.getContentType()));
 	}
 
 
