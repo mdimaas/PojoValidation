@@ -22,7 +22,7 @@
 
     <mvc:interceptors>
         <mvc:interceptor>
-            <mvc:mapping path="/test"/>
+            <mvc:mapping path="/**"/>
             <ref bean="validationInterceptor" />
         </mvc:interceptor>
     </mvc:interceptors>

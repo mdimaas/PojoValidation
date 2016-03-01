@@ -1,8 +1,9 @@
 package com.delidishes.validate.spring.test;
 
-import com.delidishes.validate.ValidateException;
+import com.delidishes.validate.exception.ValidateException;
 import com.delidishes.validate.spring.interceptor.PojoValidationInterceptor;
 import com.delidishes.validate.spring.test.controller.TestControllerWithErrorHandler;
+import com.delidishes.validate.spring.test.controller.TestControllerWithoutErrorHandler;
 import com.delidishes.validate.spring.test.dto.TestPojo;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
@@ -40,6 +41,9 @@ public class ValidateInterceptorTest {
 
 	@Autowired
 	private TestControllerWithErrorHandler testControllerWithErrorHandler;
+
+	@Autowired
+	private TestControllerWithoutErrorHandler testControllerWithoutErrorHandler;
 
 	private MockHttpServletRequest request;
 	private MockHttpServletResponse response;
@@ -109,5 +113,58 @@ public class ValidateInterceptorTest {
 		Object handler = handlerMapping.getHandler(request).getHandler();
 		interceptor.preHandle(request, response, handler);
 		assertEquals(testControllerWithErrorHandler.validateTest(testPojo), testPojo.getTest());
+	}
+
+	@Test
+	public void customHandlerValidationTest() throws Exception {
+		TestPojo testPojo = new TestPojo();
+		testPojo.setTest("test2");
+		ObjectMapper mapper = new ObjectMapper();
+		StringWriter writer = new StringWriter();
+		mapper.writeValue(writer, testPojo);
+		fillPostRequestBody(request, "/testWithoutValidation", writer.toString());
+		Object handler = handlerMapping.getHandler(request).getHandler();
+		interceptor.preHandle(request, response, handler);
+		assertEquals(testControllerWithoutErrorHandler.testCustomHandler(testPojo), "testSuccess");
+	}
+
+	@Test
+	public void rulesValidationTest() throws Exception {
+		TestPojo testPojo = new TestPojo();
+		testPojo.setTest("test2");
+		ObjectMapper mapper = new ObjectMapper();
+		StringWriter writer = new StringWriter();
+		mapper.writeValue(writer, testPojo);
+		fillPostRequestBody(request, "/testWithoutValidation", writer.toString());
+		Object handler = handlerMapping.getHandler(request).getHandler();
+		interceptor.preHandle(request, response, handler);
+		assertEquals(testControllerWithoutErrorHandler.testRules(testPojo), "testSuccess");
+	}
+
+	@Test
+	public void googleCaptcha2ValidationTest() throws Exception {
+		TestPojo testPojo = new TestPojo();
+		testPojo.setTest("test2");
+		ObjectMapper mapper = new ObjectMapper();
+		StringWriter writer = new StringWriter();
+		mapper.writeValue(writer, testPojo);
+		fillPostRequestBody(request, "/testWithoutValidation", writer.toString());
+		Object handler = handlerMapping.getHandler(request).getHandler();
+		interceptor.preHandle(request, response, handler);
+		assertEquals(testControllerWithoutErrorHandler.testGoogleCaptcha2(testPojo), "testSuccess");
+	}
+
+
+	@Test
+	public void methodWithoutValidationTest() throws Exception {
+		TestPojo testPojo = new TestPojo();
+		testPojo.setTest("test2");
+		ObjectMapper mapper = new ObjectMapper();
+		StringWriter writer = new StringWriter();
+		mapper.writeValue(writer, testPojo);
+		fillPostRequestBody(request, "/testWithoutValidation", writer.toString());
+		Object handler = handlerMapping.getHandler(request).getHandler();
+		interceptor.preHandle(request, response, handler);
+		assertEquals(testControllerWithoutErrorHandler.testWithoutValidation(testPojo), testPojo.getTest());
 	}
 }
