@@ -4,6 +4,7 @@ import com.delidishes.validate.annotation.CustomValidate;
 import com.delidishes.validate.annotation.GoogleReCaptcha2Validate;
 import com.delidishes.validate.annotation.NotNull;
 import com.delidishes.validate.annotation.Rules;
+import com.delidishes.validate.exception.FieldAccessException;
 import com.delidishes.validate.handler.GoogleReCaptcha2ValidateHandler;
 import com.delidishes.validate.handler.IValidateHandler;
 import com.delidishes.validate.handler.RuleValidateHandler;
@@ -23,7 +24,7 @@ import static com.delidishes.validate.ValidateStringUtils.isNotEmpty;
 
 public final class ValidateUtils {
 
-	public static final Logger log = Logger.getLogger(ValidateUtils.class);
+	private static final Logger LOG = Logger.getLogger(ValidateUtils.class);
 
 	private ValidateUtils() {
 		throw new UnsupportedOperationException();
@@ -50,16 +51,17 @@ public final class ValidateUtils {
 
 	public static <T> ValidateResult emptyValidate(T pojo) {
 		ValidateResult result = new ValidateResult(false);
-		fieldsByAnnotation(pojo, NotNull.class).forEach(f -> {
+		for (Field f : fieldsByAnnotation(pojo, NotNull.class)) {
 			try {
 				f.setAccessible(true);
 				Object value = f.get(pojo);
 				boolean verify = value != null && value instanceof String ? isNotEmpty(String.valueOf(value)) : Objects.nonNull(value);
 				writeResult(result, verify, f.getAnnotation(NotNull.class).errorMessage());
 			} catch (IllegalAccessException e) {
-				log.error("Validate error in method {Validate.emptyValidate}", e);
+				LOG.error("Validate error in method {Validate.emptyValidate}", e);
+				throw new FieldAccessException(e.getMessage(), e);
 			}
-		});
+		}
 		return result;
 	}
 
@@ -75,27 +77,28 @@ public final class ValidateUtils {
 				boolean verify = new GoogleReCaptcha2ValidateHandler().verify(googleReCaptcha2);
 				writeResult(result, verify, annotation.errorMessage());
 			} catch (IllegalAccessException e) {
-				log.error("Validate error in method {Validate.googleReCaptcha2Validate}", e);
+				LOG.error("Validate error in method {Validate.googleReCaptcha2Validate}", e);
+				throw new FieldAccessException(e.getMessage(), e);
 			}
 		});
 		return result;
 	}
 
 	@SuppressWarnings("unchecked")
-	public static <T> ValidateResult customHandlerValidate(T pojo) {
+	public static <T> ValidateResult customHandlerValidate(T pojo){
 		ValidateResult validateResult = new ValidateResult(false);
-		fieldsByAnnotation(pojo, CustomValidate.class).forEach(field -> {
+		for (Field field : fieldsByAnnotation(pojo, CustomValidate.class)) {
 			field.setAccessible(true);
 			CustomValidate annotation = field.getAnnotation(CustomValidate.class);
 			try {
-				IValidateHandler validateHandler = (IValidateHandler) annotation.handler().newInstance();
+				IValidateHandler validateHandler = annotation.handler().newInstance();
 				boolean verify = validateHandler.verify(field.get(pojo));
 				writeResult(validateResult, verify, annotation.errorMessage());
 			} catch (InstantiationException | IllegalAccessException e) {
-				log.error("Validate error in method {Validate.customHandlerValidate}", e);
+				LOG.error("Validate error in method {Validate.customHandlerValidate}", e);
+				throw new FieldAccessException(e.getMessage(), e);
 			}
-		});
-
+		}
 		return validateResult;
 	}
 
@@ -115,19 +118,20 @@ public final class ValidateUtils {
 
 	public static <T> ValidateResult rulesValidate(T pojo) {
 		ValidateResult validateResult = new ValidateResult(false);
-		fieldsByAnnotation(pojo, Rules.class).forEach(field -> {
+		for (Field field : fieldsByAnnotation(pojo, Rules.class)) {
 			field.setAccessible(true);
 			Arrays.stream(field.getAnnotation(Rules.class).rules()).forEach(rule -> {
 				try {
 					boolean result = new RuleValidateHandler<>().verify(RuleBuilder.createRule(rule.rule(), field.get(pojo), pojo));
-					log.debug(String.format("VALIDATION: Field = [%s]. Rule [%s] is %s", field.getName(), rule.rule(), result));
+					LOG.debug(String.format("VALIDATION: Field = [%s]. Rule [%s] is %s", field.getName(), rule.rule(), result));
 					writeResult(validateResult, result, rule.errorMessage());
-				} catch (NoSuchFieldException | IllegalAccessException e) {
-					log.error("Validate error in method {Validate.rulesValidate}", e);
+				} catch (IllegalAccessException e) {
+					LOG.error("Validate error in method {Validate.rulesValidate}", e);
+					throw new FieldAccessException(e.getMessage(), e);
 				}
 			});
 
-		});
+		}
 		return validateResult;
 	}
 }

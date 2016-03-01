@@ -1,6 +1,6 @@
 package com.delidishes.validate.spring.interceptor;
 
-import com.delidishes.validate.ValidateException;
+import com.delidishes.validate.exception.ValidateException;
 import com.delidishes.validate.ValidateResult;
 import com.delidishes.validate.spring.ValidType;
 import com.delidishes.validate.spring.ValidateHttpServletWrapper;
@@ -11,7 +11,6 @@ import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,14 +22,14 @@ public class PojoValidationInterceptor extends HandlerInterceptorAdapter {
 
 	@Override
 	public boolean preHandle(javax.servlet.http.HttpServletRequest request, javax.servlet.http.HttpServletResponse response, Object handler) throws Exception {
-		ValidateResult result = validationHandler(request, response, handler);
+		ValidateResult result = validationHandler(request, handler);
 		if(!result.isValid()) {
 			throw new ValidateException(result);
 		}
 		return super.preHandle(request, response, handler);
 	}
 
-	public ValidateResult validationHandler(HttpServletRequest request, HttpServletResponse response, Object handler) throws IOException {
+	protected ValidateResult validationHandler(HttpServletRequest request, Object handler) throws IOException {
 		HandlerMethod handlerMethod = (HandlerMethod) handler;
 		MethodParameter[] methodParameters = handlerMethod.getMethodParameters();
 		for (MethodParameter methodParameter : methodParameters) {
@@ -43,7 +42,7 @@ public class PojoValidationInterceptor extends HandlerInterceptorAdapter {
 		return new ValidateResult(true);
 	}
 
-	private <T> T readRequest(HttpServletRequest request, Class<T> pojoClass) throws IOException {
+	private static  <T> T readRequest(HttpServletRequest request, Class<T> pojoClass) throws IOException {
 		if(SUPPORT_CONTENT_TYPES.contains(request.getContentType())) {
 			return ValidateSpringUtils.fromJson(new ValidateHttpServletWrapper(request).getBody(), pojoClass);
 		}
@@ -51,7 +50,7 @@ public class PojoValidationInterceptor extends HandlerInterceptorAdapter {
 	}
 
 
-	private <T> ValidateResult validateHandler(ValidType[] types, T pojo) {
+	private static <T> ValidateResult validateHandler(ValidType[] types, T pojo) {
 		List<ValidateResult> result = new ArrayList<>();
 		for (ValidType type : types) {
 			switch (type) {

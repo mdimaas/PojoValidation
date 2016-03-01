@@ -1,5 +1,7 @@
 package com.delidishes.validate;
 
+import com.delidishes.validate.exception.ValidateException;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;

@@ -1,8 +1,11 @@
-package com.delidishes.validate;
+package com.delidishes.validate.exception;
+
+import com.delidishes.validate.ValidateResult;
 
 public class ValidateException extends Exception {
 
 	public ValidateException() {
+		super();
 	}
 
 	public ValidateException(ValidateResult result) {

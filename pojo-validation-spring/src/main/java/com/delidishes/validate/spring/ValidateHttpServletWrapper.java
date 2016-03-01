@@ -9,6 +9,7 @@ import java.nio.charset.StandardCharsets;
 
 public class ValidateHttpServletWrapper extends HttpServletRequestWrapper {
 
+	private String encoding;
 	private String body;
 
 	/**
@@ -18,14 +19,18 @@ public class ValidateHttpServletWrapper extends HttpServletRequestWrapper {
 	 * @throws IllegalArgumentException if the request is null
 	 */
 	public ValidateHttpServletWrapper(HttpServletRequest request) throws IOException {
+		this(request, StandardCharsets.UTF_8.name());
+	}
+
+	public ValidateHttpServletWrapper(HttpServletRequest request, String encoding) throws IOException {
 		super(request);
+		this.encoding = encoding;
 		this.body = getRequestBodyAsString(request);
 	}
 
-
 	@Override
 	public ServletInputStream getInputStream() throws IOException {
-		InputStream stream = new ByteArrayInputStream(body.getBytes(StandardCharsets.UTF_8));
+		InputStream stream = new ByteArrayInputStream(body.getBytes(encoding));
 		return new ServletInputStream() {
 			@Override
 			public boolean isFinished() {
@@ -39,7 +44,7 @@ public class ValidateHttpServletWrapper extends HttpServletRequestWrapper {
 
 			@Override
 			public void setReadListener(ReadListener readListener) {
-
+				throw new UnsupportedOperationException();
 			}
 
 			@Override
@@ -60,7 +65,7 @@ public class ValidateHttpServletWrapper extends HttpServletRequestWrapper {
 
 	public String getRequestBodyAsString(HttpServletRequest request) throws IOException {
 		StringBuilder requestBody = new StringBuilder();
-		BufferedReader reader = new BufferedReader(new InputStreamReader(request.getInputStream(), StandardCharsets.UTF_8));
+		BufferedReader reader = new BufferedReader(new InputStreamReader(request.getInputStream(), encoding));
 		String line;
 		while ((line = reader.readLine()) != null) {
 			requestBody.append(line);

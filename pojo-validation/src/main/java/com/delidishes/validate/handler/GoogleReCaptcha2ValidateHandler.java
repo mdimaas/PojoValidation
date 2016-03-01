@@ -43,7 +43,6 @@ public class GoogleReCaptcha2ValidateHandler implements IValidateHandler<GoogleR
 				}
 			} catch (IOException e) {
 				LOG.error("VALIDATION: ReCaptcha2 validate error", e);
-				return false;
 			}
 		}
 		return false;

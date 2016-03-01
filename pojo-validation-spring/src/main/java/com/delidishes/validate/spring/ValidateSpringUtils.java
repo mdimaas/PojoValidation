@@ -8,10 +8,15 @@ import java.util.Arrays;
 import java.util.List;
 
 import static java.util.Collections.unmodifiableList;
+import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 public final class ValidateSpringUtils {
 
-	public static final List<String> SUPPORT_CONTENT_TYPES = unmodifiableList(Arrays.asList("application/json;charset=UTF-8", "application/json"));
+	public static final List<String> SUPPORT_CONTENT_TYPES = unmodifiableList(Arrays.asList(APPLICATION_JSON_UTF8_VALUE, APPLICATION_JSON_VALUE));
+
+	private ValidateSpringUtils() {
+	}
 
 	public static <T> T fromJson(String json, Class<T> pojoClass) throws IOException {
 		ObjectMapper mapper = new ObjectMapper();

@@ -2,6 +2,7 @@ package com.delidishes.validate.spring.filter;
 
 
 import com.delidishes.validate.spring.ValidateHttpServletWrapper;
+import org.apache.log4j.Logger;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
@@ -12,6 +13,8 @@ import static com.delidishes.validate.spring.ValidateSpringUtils.SUPPORT_CONTENT
 
 public class ValidateFilter implements Filter {
 
+	private static final Logger LOG = Logger.getLogger(ValidateFilter.class);
+
 	private String encoding;
 
 	@Override
@@ -20,13 +23,14 @@ public class ValidateFilter implements Filter {
 		if (encoding == null) {
 			encoding = StandardCharsets.UTF_8.toString();
 		}
+		LOG.info(String.format("Init [%s] with encoding %s", this.getClass().getName(), encoding));
 	}
 
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 		if (SUPPORT_CONTENT_TYPES.contains(request.getContentType())) {
 			request.setCharacterEncoding(encoding);
-			chain.doFilter(new ValidateHttpServletWrapper((HttpServletRequest) request), response);
+			chain.doFilter(new ValidateHttpServletWrapper((HttpServletRequest) request, encoding), response);
 		} else {
 			chain.doFilter(request, response);
 		}
@@ -34,6 +38,6 @@ public class ValidateFilter implements Filter {
 
 	@Override
 	public void destroy() {
-
+		LOG.info(String.format("Destroy [%s] with encoding %s", this.getClass().getName(), encoding));
 	}
 }
