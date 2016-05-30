@@ -27,6 +27,8 @@
         </mvc:interceptor>
     </mvc:interceptors>
 
-    <bean  id="validationInterceptor" class="com.delidishes.validate.spring.interceptor.PojoValidationInterceptor" />
+    <bean  id="validationInterceptor" class="com.delidishes.validate.spring.interceptor.PojoValidationInterceptor">
+        <property name="handlerAdapter" ref="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter" />
+    </bean>
 
 </beans>

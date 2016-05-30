@@ -1,5 +1,8 @@
 package com.delidishes.validate.spring;
 
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpInputMessage;
+
 import javax.servlet.ReadListener;
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -7,7 +10,7 @@ import javax.servlet.http.HttpServletRequestWrapper;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 
-public class ValidateHttpServletWrapper extends HttpServletRequestWrapper {
+public class ValidateHttpServletWrapper extends HttpServletRequestWrapper implements HttpInputMessage {
 
 	private String encoding;
 	private String body;
@@ -59,8 +62,13 @@ public class ValidateHttpServletWrapper extends HttpServletRequestWrapper {
 		return new BufferedReader(new InputStreamReader(this.getInputStream()));
 	}
 
-	public String getBody() {
+	public String getStringBody() {
 		return this.body;
+	}
+
+	@Override
+	public InputStream getBody() throws IOException {
+		return new ByteArrayInputStream(body.getBytes(encoding));
 	}
 
 	public String getRequestBodyAsString(HttpServletRequest request) throws IOException {
@@ -71,5 +79,10 @@ public class ValidateHttpServletWrapper extends HttpServletRequestWrapper {
 			requestBody.append(line);
 		}
 		return requestBody.toString();
+	}
+
+	@Override
+	public HttpHeaders getHeaders() {
+		return null;
 	}
 }
