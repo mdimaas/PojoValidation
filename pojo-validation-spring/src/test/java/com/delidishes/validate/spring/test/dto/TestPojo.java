@@ -1,6 +1,6 @@
 package com.delidishes.validate.spring.test.dto;
 
-import com.delidishes.validate.annotation.NotNull;
+import javax.validation.constraints.NotNull;
 
 public class TestPojo {
 	@NotNull

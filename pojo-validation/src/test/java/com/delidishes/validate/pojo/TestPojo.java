@@ -3,6 +3,8 @@ package com.delidishes.validate.pojo;
 import com.delidishes.validate.annotation.*;
 import com.delidishes.validate.handler.TestCustomHandlerValidate;
 
+import javax.validation.constraints.NotNull;
+
 public class TestPojo {
 	@NotNull
 	public String strTestValue;

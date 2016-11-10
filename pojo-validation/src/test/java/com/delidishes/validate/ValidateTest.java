@@ -1,6 +1,5 @@
 package com.delidishes.validate;
 
-import com.delidishes.validate.annotation.Rule;
 import com.delidishes.validate.exception.FieldAccessException;
 import com.delidishes.validate.exception.RuleException;
 import com.delidishes.validate.exception.ValidateException;

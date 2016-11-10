@@ -10,5 +10,5 @@ import java.lang.annotation.Target;
 public @interface GoogleReCaptcha2Validate {
 
 	String appSecret();
-	String errorMessage() default "Captcha is not valid";
+	String message() default "Captcha isn't valid";
 }

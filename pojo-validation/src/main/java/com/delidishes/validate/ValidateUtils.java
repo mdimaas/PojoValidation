@@ -2,7 +2,6 @@ package com.delidishes.validate;
 
 import com.delidishes.validate.annotation.CustomValidate;
 import com.delidishes.validate.annotation.GoogleReCaptcha2Validate;
-import com.delidishes.validate.annotation.NotNull;
 import com.delidishes.validate.annotation.Rules;
 import com.delidishes.validate.exception.FieldAccessException;
 import com.delidishes.validate.handler.GoogleReCaptcha2ValidateHandler;
@@ -12,6 +11,7 @@ import com.delidishes.validate.handler.builder.RuleBuilder;
 import com.delidishes.validate.handler.pojo.GoogleReCaptcha2;
 import org.apache.log4j.Logger;
 
+import javax.validation.constraints.NotNull;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -56,7 +56,7 @@ public final class ValidateUtils {
 				f.setAccessible(true);
 				Object value = f.get(pojo);
 				boolean verify = value != null && value instanceof String ? isNotEmpty(String.valueOf(value)) : Objects.nonNull(value);
-				writeResult(result, verify, f.getAnnotation(NotNull.class).errorMessage());
+				writeResult(result, verify, f.getAnnotation(NotNull.class).message());
 			} catch (IllegalAccessException e) {
 				LOG.error("Validate error in method {Validate.emptyValidate}", e);
 				throw new FieldAccessException(e.getMessage(), e);
@@ -75,7 +75,7 @@ public final class ValidateUtils {
 				googleReCaptcha2.setAppSecret(annotation.appSecret());
 				googleReCaptcha2.setValue(String.valueOf(field.get(pojo)));
 				boolean verify = new GoogleReCaptcha2ValidateHandler().verify(googleReCaptcha2);
-				writeResult(result, verify, annotation.errorMessage());
+				writeResult(result, verify, annotation.message());
 			} catch (IllegalAccessException e) {
 				LOG.error("Validate error in method {Validate.googleReCaptcha2Validate}", e);
 				throw new FieldAccessException(e.getMessage(), e);
@@ -93,7 +93,7 @@ public final class ValidateUtils {
 			try {
 				IValidateHandler validateHandler = annotation.handler().newInstance();
 				boolean verify = validateHandler.verify(field.get(pojo));
-				writeResult(validateResult, verify, annotation.errorMessage());
+				writeResult(validateResult, verify, annotation.message());
 			} catch (InstantiationException | IllegalAccessException e) {
 				LOG.error("Validate error in method {Validate.customHandlerValidate}", e);
 				throw new FieldAccessException(e.getMessage(), e);
@@ -124,7 +124,7 @@ public final class ValidateUtils {
 				try {
 					boolean result = new RuleValidateHandler<>().verify(RuleBuilder.createRule(rule.rule(), field.get(pojo), pojo));
 					LOG.debug(String.format("VALIDATION: Field = [%s]. Rule [%s] is %s", field.getName(), rule.rule(), result));
-					writeResult(validateResult, result, rule.errorMessage());
+					writeResult(validateResult, result, rule.message());
 				} catch (IllegalAccessException e) {
 					LOG.error("Validate error in method {Validate.rulesValidate}", e);
 					throw new FieldAccessException(e.getMessage(), e);

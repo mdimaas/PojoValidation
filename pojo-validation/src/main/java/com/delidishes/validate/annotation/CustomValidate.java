@@ -11,5 +11,5 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 public @interface CustomValidate {
 	Class<? extends IValidateHandler<?>> handler();
-	String errorMessage() default "This field is not valid";
+	String message() default "This field isn't valid";
 }

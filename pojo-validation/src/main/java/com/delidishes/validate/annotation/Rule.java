@@ -14,7 +14,8 @@ public @interface Rule {
 	 *     }
 	 * </pre>
 	 * We need validate two field in class, we add rule @Rule(rule = "eq $f{confirmPwd}")
+	 * @return
 	 */
 	String rule();
-	String errorMessage() default "This rule is not valid";
+	String message() default "This rule is not valid";
 }
