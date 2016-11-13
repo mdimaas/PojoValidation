@@ -18,8 +18,9 @@ public class ValidateHttpServletWrapper extends HttpServletRequestWrapper implem
 	/**
 	 * Constructs a request object wrapping the given request.
 	 *
-	 * @param request
+	 * @param request - current request
 	 * @throws IllegalArgumentException if the request is null
+	 * @throws IOException if not parse request
 	 */
 	public ValidateHttpServletWrapper(HttpServletRequest request) throws IOException {
 		this(request, StandardCharsets.UTF_8.name());
