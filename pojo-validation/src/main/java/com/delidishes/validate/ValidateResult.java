@@ -26,7 +26,7 @@ public class ValidateResult {
 	}
 
 	public boolean isValid() {
-		return isValid;
+		return getErrors().isEmpty() && isValid;
 	}
 
 	public void addError(String error) {
