@@ -5,7 +5,6 @@ import com.delidishes.validate.exception.RuleException;
 import com.delidishes.validate.exception.ValidateException;
 import com.delidishes.validate.pojo.BadRule;
 import com.delidishes.validate.pojo.BadRuleFieldPojo;
-import com.delidishes.validate.pojo.BadRuleOperationPojo;
 import com.delidishes.validate.pojo.TestPojo;
 import org.junit.Before;
 import org.junit.Test;
@@ -130,7 +129,7 @@ public class ValidateTest {
 	}
 
 	@Test
-	public void eptyThrowsValidationExceptionTest1() throws Exception {
+	public void emptyThrowsValidationExceptionTest1() throws Exception {
 		testPojo.customHandler = 20;
 		ValidateUtils.customHandlerValidate(testPojo).throwsExceptionIfFalse(error -> "Override error text test!");
 	}
@@ -144,11 +143,6 @@ public class ValidateTest {
 	@Test(expected = FieldAccessException.class)
 	public void badRuleFieldValidationTest() {
 		ValidateUtils.rulesValidate(new BadRuleFieldPojo());
-	}
-
-	@Test(expected = UnsupportedOperationException.class)
-	public void badRuleOperationValidationTest() {
-		ValidateUtils.rulesValidate(new BadRuleOperationPojo());
 	}
 
 	@Test(expected = RuleException.class)

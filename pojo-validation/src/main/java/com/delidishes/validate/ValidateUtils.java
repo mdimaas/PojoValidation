@@ -122,7 +122,7 @@ public final class ValidateUtils {
 			field.setAccessible(true);
 			Arrays.stream(field.getAnnotation(Rules.class).rules()).forEach(rule -> {
 				try {
-					boolean result = new RuleValidateHandler<>().verify(RuleBuilder.createRule(rule.rule(), field.get(pojo), pojo));
+					boolean result = new RuleValidateHandler<>().verify(RuleBuilder.createRule(rule, field.get(pojo), pojo));
 					LOG.debug(String.format("VALIDATION: Field = [%s]. Rule [%s] is %s", field.getName(), rule.rule(), result));
 					writeResult(validateResult, result, rule.message());
 				} catch (IllegalAccessException e) {

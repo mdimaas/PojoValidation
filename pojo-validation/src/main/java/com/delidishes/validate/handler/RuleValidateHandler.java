@@ -7,7 +7,7 @@ public class RuleValidateHandler<T> implements IValidateHandler<Rule<T>> {
 	public boolean verify(Rule<T> value) {
 		switch (value.getOperation()) {
 			case EQ:
-				return value.getCurrentValue() != null && value.getCurrentValue().equals(value.getCompareValue());
+				return value.getCurrentValue() != null && value.getCurrentValue().equals(value.getCompareValue()) || (value.getCurrentValue() == null && value.getCompareValue() == null);
 			case NOTEQ:
 				return value.getCurrentValue() != null && !value.getCurrentValue().equals(value.getCompareValue());
 			default:
